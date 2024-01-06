@@ -1,3 +1,4 @@
 # Combat
 A Javascript port of the Atari 2600 game Combat.
-Play it [here](https://sethtrei.github.io/Combat)
+
+Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
