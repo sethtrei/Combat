@@ -248,3 +248,5 @@ function game() {
 const p1 = new Player(64, 366);
 window.requestAnimationFrame(game);
 
+
+// cmd option r!
