@@ -4,8 +4,9 @@ A Javascript port of the Atari 2600 game Combat.
 Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 
 ### Todo
-- [ ] Firing ability
 - [ ] Barriers
+- [ ] Collision with barriers/walls
+- [ ] Firing ability
 - [ ] Second player
 - [ ] Score keeping
 - [ ] Multiple keypresses at once

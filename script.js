@@ -6,7 +6,11 @@ const ctx = canvas.getContext('2d');
 
 const scale = 10;
 
-
+const obstacles = [
+    [76, 28, 8, 18],
+    [76, 82, 8, 18],
+    [44, 59, 16, 10],
+    [100, 59, 16, 10]];
 
 const rotateLeftMap = new Map([
     ['n', 'nnw'],
@@ -86,7 +90,20 @@ const moveYMap = new Map([
 
 
 
+function drawBoarder() {
+    ctx.fillStyle = "WHITE";
+    ctx.fillRect(0, 8 * scale, 160 * scale, 112 * scale);
+    ctx.clearRect(4 * scale, 13 * scale, 152 * scale, 102 * scale);
+}
 
+function drawObstacles() {
+    ctx.fillStyle = "YELLOW";
+
+    for (const [x, y, w, h] of obstacles) {
+
+        ctx.fillRect(x * scale, y * scale, w * scale, h * scale);
+    }
+}
 
 class Player {
     constructor(x, y) {
@@ -398,7 +415,8 @@ document.onkeydown = function (e) {
 
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    drawBoarder();
+    drawObstacles();
     p1.drawPlayer();
 }
 function game() {
