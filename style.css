@@ -1,5 +1,5 @@
 body {
-    background-color: #2730b8;
+    background-color: #3018a0;
     margin: 0;
     overflow: hidden;
     height: 100%;
@@ -12,7 +12,7 @@ canvas {
     /* Remove any default whitespace */
     margin: auto;
     /* Center the canvas */
-    border: 2px solid #000;
+    border: 1px solid white;
     /* Add a border to the canvas */
     height: 50%;
     width: 50%;

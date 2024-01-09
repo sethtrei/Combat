@@ -10,7 +10,13 @@ const obstacles = [
     [76, 28, 8, 18],
     [76, 82, 8, 18],
     [44, 59, 16, 10],
-    [100, 59, 16, 10]];
+    [100, 59, 16, 10],
+    [20, 50, 8, 5],
+    [20, 73, 8, 5],
+    [24, 55, 4, 18],
+    [132, 50, 8, 5],
+    [132, 73, 8, 5],
+    [132, 55, 4, 18]];
 
 const rotateLeftMap = new Map([
     ['n', 'nnw'],
@@ -91,13 +97,13 @@ const moveYMap = new Map([
 
 
 function drawBoarder() {
-    ctx.fillStyle = "WHITE";
+    ctx.fillStyle = "#286898";
     ctx.fillRect(0, 8 * scale, 160 * scale, 112 * scale);
     ctx.clearRect(4 * scale, 13 * scale, 152 * scale, 102 * scale);
 }
 
 function drawObstacles() {
-    ctx.fillStyle = "YELLOW";
+    ctx.fillStyle = "#286898";
 
     for (const [x, y, w, h] of obstacles) {
 
@@ -107,8 +113,8 @@ function drawObstacles() {
 
 class Player {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        this.x = 10 * scale;
+        this.y = 61 * scale;
         this.score = 0;
         this.color = '#b0e070';
         this.dir = 'e';
@@ -431,6 +437,6 @@ window.requestAnimationFrame(game);
 
 
 // cmd option r!
-
+// right player: d0d040
 
 
