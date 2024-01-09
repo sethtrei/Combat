@@ -112,12 +112,12 @@ function drawObstacles() {
 }
 
 class Player {
-    constructor(x, y) {
-        this.x = 10 * scale;
-        this.y = 61 * scale;
+    constructor(startX, startY, color, startDir) {
+        this.x = startX * scale;
+        this.y = startY * scale;
         this.score = 0;
-        this.color = '#b0e070';
-        this.dir = 'e';
+        this.color = color;
+        this.dir = startDir;
 
     }
 
@@ -410,6 +410,15 @@ document.onkeydown = function (e) {
         case 'w':
             p1.moveForward();
             break;
+        case 'l':
+            p2.rotateLeft();
+            break;
+        case "'":
+            p2.rotateRight();
+            break;
+        case 'p':
+            p2.moveForward();
+            break;
     }
 
 };
@@ -424,6 +433,7 @@ function render() {
     drawBoarder();
     drawObstacles();
     p1.drawPlayer();
+    p2.drawPlayer(); // this should be parameterized eventually...
 }
 function game() {
     //update();
@@ -432,11 +442,12 @@ function game() {
 }
 
 
-const p1 = new Player(64, 366);
+const p1 = new Player(10, 61, "#b0e070", 'e');
+const p2 = new Player(141, 60, "#d0d040", 'w');
 window.requestAnimationFrame(game);
 
 
 // cmd option r!
-// right player: d0d040
+
 
 
