@@ -3,9 +3,7 @@ A Javascript port of the Atari 2600 game Combat.
 
 Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 
-Ongoing for this project:
-- [x] Tank graphics
-- [x] Rotation and movement
+### Ongoing for this project:
 - [ ] Firing ability
 - [ ] Barriers
 - [ ] Second player
@@ -15,3 +13,7 @@ Ongoing for this project:
 - [ ] Online multiplayer
 - [ ] Mobile multiplayer
 - [ ] More than 2 players (?)
+
+### Done ✓:
+- [x] Tank graphics
+- [x] Rotation and movement
