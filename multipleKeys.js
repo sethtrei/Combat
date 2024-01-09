@@ -1,3 +1,5 @@
+// Scrap file
+
 const executeMoves = () => {
     Object.keys(controller).forEach(key => {
         controller[key].pressed && controller[key].func.call(controller[key].p)
