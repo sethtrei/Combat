@@ -6,6 +6,8 @@ const ctx = canvas.getContext('2d');
 
 const scale = 10;
 
+
+
 const rotateLeftMap = new Map([
     ['n', 'nnw'],
     ['nnw', 'nw'],
@@ -46,40 +48,40 @@ const rotateRightMap = new Map([
 
 const moveXMap = new Map([
     ['n', 0],
-    ['nne', 1],
+    ['nne', 0.45],
     ['ne', 1],
-    ['ene', 2],
+    ['ene', 0.9],
     ['e', 1],
-    ['ese', 2],
+    ['ese', 0.9],
     ['se', 1],
-    ['sse', 1],
+    ['sse', 0.45],
     ['s', 0],
-    ['ssw', -1],
+    ['ssw', -0.45],
     ['sw', -1],
-    ['wsw', -2],
+    ['wsw', -0.9],
     ['w', -1],
-    ['wnw', -2],
+    ['wnw', -0.9],
     ['nw', -1],
-    ['nnw', -1]
+    ['nnw', -0.45]
 ]);
 
 const moveYMap = new Map([
     ['n', -1],
-    ['nne', -2],
+    ['nne', -0.9],
     ['ne', -1],
-    ['ene', -1],
+    ['ene', -0.45],
     ['e', 0],
-    ['ese', 1],
+    ['ese', 0.45],
     ['se', 1],
-    ['sse', 2],
+    ['sse', 0.9],
     ['s', 1],
-    ['ssw', 2],
+    ['ssw', 0.9],
     ['sw', 1],
-    ['wsw', 1],
+    ['wsw', 0.45],
     ['w', 0],
-    ['wnw', -1],
+    ['wnw', -0.45],
     ['nw', -1],
-    ['nnw', -2]
+    ['nnw', -0.9]
 ]);
 
 
@@ -190,6 +192,154 @@ class Player {
                 this.drawPoint(6, 6);
                 this.drawPoint(7, 7);
                 break;
+            case 'nnw':
+                this.drawShape(0, 3, 8, 2);
+                this.drawShape(1, 5, 3, 2);
+                this.drawShape(5, 1, 2, 2);
+                this.drawShape(2, 0, 1, 2);
+                this.drawShape(3, 2, 2, 1);
+                for (const [x, y] of
+                    [
+                        [0, 2],
+                        [5, 0],
+                        [6, 5],
+                        [2, 7]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'wsw':
+                for (const [x, y, w, h] of
+                    [
+                        [3, 0, 2, 8],
+                        [5, 4, 2, 3],
+                        [1, 1, 2, 2],
+                        [2, 3, 1, 2],
+                        [0, 5, 2, 1]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [5, 1],
+                        [0, 2],
+                        [2, 7],
+                        [7, 5]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'sse':
+                for (const [x, y, w, h] of
+                    [
+                        [0, 3, 8, 2],
+                        [4, 1, 3, 2],
+                        [1, 5, 2, 2],
+                        [3, 5, 2, 1],
+                        [5, 6, 1, 2]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [5, 0],
+                        [1, 2],
+                        [2, 7],
+                        [7, 5]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'ene':
+                for (const [x, y, w, h] of
+                    [
+                        [3, 0, 2, 8],
+                        [1, 1, 2, 3],
+                        [5, 5, 2, 2],
+                        [6, 2, 2, 1],
+                        [5, 3, 1, 2]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [5, 0],
+                        [0, 2],
+                        [7, 5],
+                        [2, 6]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'wnw':
+                for (const [x, y, w, h] of
+                    [
+                        [3, 0, 2, 8],
+                        [5, 1, 2, 3],
+                        [1, 5, 2, 2],
+                        [0, 2, 2, 1],
+                        [2, 3, 1, 2]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [2, 0],
+                        [7, 2],
+                        [0, 5],
+                        [5, 6]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'ssw':
+                for (const [x, y, w, h] of
+                    [
+                        [0, 3, 8, 2],
+                        [1, 1, 3, 2],
+                        [5, 5, 2, 2],
+                        [3, 5, 2, 1],
+                        [2, 6, 1, 2]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [2, 0],
+                        [6, 2],
+                        [0, 5],
+                        [5, 7]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'ese':
+                for (const [x, y, w, h] of
+                    [
+                        [3, 0, 2, 8],
+                        [1, 4, 2, 3],
+                        [5, 1, 2, 2],
+                        [5, 3, 1, 2],
+                        [6, 5, 2, 1]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [2, 1],
+                        [7, 2],
+                        [0, 5],
+                        [5, 7]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
+            case 'nne':
+                for (const [x, y, w, h] of
+                    [
+                        [0, 3, 8, 2],
+                        [4, 5, 3, 2],
+                        [1, 1, 2, 2],
+                        [3, 2, 2, 1],
+                        [5, 0, 1, 2]]) {
+                    this.drawShape(x, y, w, h);
+                }
+                for (const [x, y] of
+                    [
+                        [2, 0],
+                        [7, 2],
+                        [1, 5],
+                        [5, 7]]) {
+                    this.drawPoint(x, y);
+                }
+                break;
 
 
         }
@@ -205,8 +355,19 @@ class Player {
     }
 
     moveForward() {
-        this.x += moveXMap.get(this.dir) * scale;
-        this.y += moveYMap.get(this.dir) * scale;
+        var newX = this.x + (moveXMap.get(this.dir) * scale);
+        var newY = this.y + (moveYMap.get(this.dir) * scale);
+        if (newX < 0 || newY < 0 || newY + (scale * 8) > canvas.height || newX + (scale * 8) > canvas.width) {
+            this.x -= 2 * moveXMap.get(this.dir) * scale;
+            this.y -= 2 * moveYMap.get(this.dir) * scale;
+        } else {
+            this.x = newX;
+            this.y = newY;
+        }
+
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
     }
 
 
@@ -232,15 +393,17 @@ document.onkeydown = function (e) {
 
 
 
+
+
+
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     p1.drawPlayer();
-    console.log('rendering');
 }
 function game() {
     //update();
     render();
-
     window.requestAnimationFrame(game);
 }
 
@@ -250,3 +413,6 @@ window.requestAnimationFrame(game);
 
 
 // cmd option r!
+
+
+
