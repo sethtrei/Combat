@@ -5,7 +5,8 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 
 ### Todo
 
-- [ ] Collision with barriers/walls
+- [ ] Collision between players
+- [ ] Collision with walls
 - [ ] Firing ability
 - [ ] Score keeping
 - [ ] Multiple keypresses at once
@@ -20,3 +21,4 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 - [x] Rotation and movement
 - [x] Barriers
 - [x] Second player
+- [x] Collision with barriers/walls

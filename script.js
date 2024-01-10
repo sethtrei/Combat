@@ -118,6 +118,7 @@ class Player {
         this.score = 0;
         this.color = color;
         this.dir = startDir;
+        this.hitbox = 8 * scale;
 
     }
 
@@ -377,10 +378,46 @@ class Player {
         this.dir = rotateRightMap.get(this.dir);
     }
 
+    willCollideObstacle(x, y) {
+
+        for (const [obstX, obstY, obstW, obstH] of obstacles) {
+            if (x < obstX * scale + obstW * scale &&
+                x + this.hitbox > obstX * scale &&
+                y < obstY * scale + obstH * scale &&
+                y + this.hitbox > obstY * scale) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    willCollidePlayer(x, y, hitbox) {
+
+        // NEED TO GET WORKING!
+
+        players.forEach(function (item) {
+            if (item != this && x < item.x + item.hitbox &&
+                x + hitbox > item.x &&
+                y < item.y + item.hitbox &&
+                y + hitbox > item.y) {
+                return true;
+            }
+        });
+
+
+
+
+        return false;
+
+    }
+
     moveForward() {
+
         var newX = this.x + (moveXMap.get(this.dir) * scale);
         var newY = this.y + (moveYMap.get(this.dir) * scale);
-        if (newX < 0 || newY < 0 || newY + (scale * 8) > canvas.height || newX + (scale * 8) > canvas.width) {
+        if (this.willCollideObstacle(newX, newY) || this.willCollidePlayer(newX, newY, this.hitbox)) {
             this.x -= 2 * moveXMap.get(this.dir) * scale;
             this.y -= 2 * moveYMap.get(this.dir) * scale;
         } else {
@@ -395,6 +432,8 @@ class Player {
 
 
 
+
+
 }
 
 
@@ -402,22 +441,22 @@ document.onkeydown = function (e) {
     console.log(e.key)
     switch (e.key.toLowerCase()) {
         case 'a':
-            p1.rotateLeft();
+            players[0].rotateLeft();
             break;
         case 'd':
-            p1.rotateRight();
+            players[0].rotateRight();
             break;
         case 'w':
-            p1.moveForward();
+            players[0].moveForward();
             break;
         case 'l':
-            p2.rotateLeft();
+            players[1].rotateLeft();
             break;
         case "'":
-            p2.rotateRight();
+            players[1].rotateRight();
             break;
         case 'p':
-            p2.moveForward();
+            players[1].moveForward();
             break;
     }
 
@@ -432,8 +471,9 @@ function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBoarder();
     drawObstacles();
-    p1.drawPlayer();
-    p2.drawPlayer(); // this should be parameterized eventually...
+    players.forEach(function (item) {
+        item.drawPlayer();
+    });
 }
 function game() {
     //update();
@@ -442,8 +482,7 @@ function game() {
 }
 
 
-const p1 = new Player(10, 61, "#b0e070", 'e');
-const p2 = new Player(141, 60, "#d0d040", 'w');
+const players = [new Player(10, 61, "#b0e070", 'e'), new Player(141, 60, "#d0d040", 'w')];
 window.requestAnimationFrame(game);
 
 
