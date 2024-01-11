@@ -5,15 +5,16 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 
 ### Todo
 
-- [ ] Collision between players
-- [ ] Collision with walls
+- [ ] Clean up code
 - [ ] Firing ability
+- [ ] Firing displacing victim
 - [ ] Score keeping
 - [ ] Multiple keypresses at once
 - [ ] Graphics in separate file
 - [ ] Local multiplayer
 - [ ] Online multiplayer
-- [ ] Mobile responsiveness
+- [ ] Perfect favicon
+- [ ] Mobile version
 - [ ] More than 2 players (?)
 
 ### Done 
@@ -21,4 +22,7 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 - [x] Rotation and movement
 - [x] Barriers
 - [x] Second player
-- [x] Collision with barriers/walls
+- [x] Collision with barriers
+- [x] Collision between players
+- [x] Collision with walls
+- [x] Add favicon

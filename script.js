@@ -1,12 +1,15 @@
-// select canvas element
+
 const canvas = document.getElementById("pong");
 
-// getContext of canvas = methods and properties to draw and do a lot of thing to the canvas
 const ctx = canvas.getContext('2d');
 
 const scale = 10;
 
 const obstacles = [
+    [0, 8, 160, 5],
+    [0, 115, 160, 5],
+    [0, 13, 4, 102],
+    [156, 13, 4, 102],
     [76, 28, 8, 18],
     [76, 82, 8, 18],
     [44, 59, 16, 10],
@@ -96,11 +99,7 @@ const moveYMap = new Map([
 
 
 
-function drawBoarder() {
-    ctx.fillStyle = "#286898";
-    ctx.fillRect(0, 8 * scale, 160 * scale, 112 * scale);
-    ctx.clearRect(4 * scale, 13 * scale, 152 * scale, 102 * scale);
-}
+
 
 function drawObstacles() {
     ctx.fillStyle = "#286898";
@@ -118,7 +117,7 @@ class Player {
         this.score = 0;
         this.color = color;
         this.dir = startDir;
-        this.hitbox = 8 * scale;
+        this.hitbox = 9 * scale;
 
     }
 
@@ -382,9 +381,9 @@ class Player {
 
         for (const [obstX, obstY, obstW, obstH] of obstacles) {
             if (x < obstX * scale + obstW * scale &&
-                x + this.hitbox > obstX * scale &&
+                x + this.hitbox - scale > obstX * scale &&
                 y < obstY * scale + obstH * scale &&
-                y + this.hitbox > obstY * scale) {
+                y + this.hitbox - scale > obstY * scale) {
                 return true;
             }
         }
@@ -393,33 +392,49 @@ class Player {
 
     }
 
-    willCollidePlayer(x, y, hitbox) {
+    willCollideWall(x, y) {
 
-        // NEED TO GET WORKING!
-
-        players.forEach(function (item) {
-            if (item != this && x < item.x + item.hitbox &&
-                x + hitbox > item.x &&
-                y < item.y + item.hitbox &&
-                y + hitbox > item.y) {
+        for (const [obstX, obstY, obstW, obstH] of obstacles) {
+            if (x < obstX * scale + obstW * scale &&
+                x + this.hitbox - scale > obstX * scale &&
+                y < obstY * scale + obstH * scale &&
+                y + this.hitbox - scale > obstY * scale) {
                 return true;
             }
-        });
-
-
-
+        }
 
         return false;
 
     }
 
+    willCollidePlayer(x, y) {
+
+        const thisPlayer = this;
+        var collision = false;
+        players.forEach(function (otherPlayer) {
+
+            if (!collision && otherPlayer != thisPlayer && x < otherPlayer.x + otherPlayer.hitbox &&
+                x + thisPlayer.hitbox > otherPlayer.x &&
+                y < otherPlayer.y + otherPlayer.hitbox &&
+                y + thisPlayer.hitbox > otherPlayer.y) {
+                collision = true;
+            }
+        });
+
+        return collision;
+
+    }
+
+
+
     moveForward() {
 
         var newX = this.x + (moveXMap.get(this.dir) * scale);
         var newY = this.y + (moveYMap.get(this.dir) * scale);
-        if (this.willCollideObstacle(newX, newY) || this.willCollidePlayer(newX, newY, this.hitbox)) {
-            this.x -= 2 * moveXMap.get(this.dir) * scale;
-            this.y -= 2 * moveYMap.get(this.dir) * scale;
+
+        if (this.willCollideObstacle(newX, newY) || this.willCollideWall(newX, newY) || this.willCollidePlayer(newX, newY)) {
+            this.x -= 3 * moveXMap.get(this.dir) * scale;
+            this.y -= 3 * moveYMap.get(this.dir) * scale;
         } else {
             this.x = newX;
             this.y = newY;
@@ -438,7 +453,7 @@ class Player {
 
 
 document.onkeydown = function (e) {
-    console.log(e.key)
+    //  console.log(e.key)
     switch (e.key.toLowerCase()) {
         case 'a':
             players[0].rotateLeft();
@@ -469,14 +484,14 @@ document.onkeydown = function (e) {
 
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBoarder();
     drawObstacles();
-    players.forEach(function (item) {
-        item.drawPlayer();
+
+
+    players.forEach(function (player) {
+        player.drawPlayer();
     });
 }
 function game() {
-    //update();
     render();
     window.requestAnimationFrame(game);
 }
