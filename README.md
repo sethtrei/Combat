@@ -10,9 +10,10 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 - [ ] Firing ability
 - [ ] Firing displacing victim
 - [ ] Score keeping
-- [ ] Investigate making simultaneous keypresses more elegant
+- [ ] Investigate making simultaneous keypresses more elegant / fix over-rotation
 - [ ] Local multiplayer
 - [ ] Online multiplayer
+- [ ] Names above tanks (?)
 - [ ] Perfect favicon
 - [ ] Mobile version
 - [ ] More than 2 players (?)
