@@ -20,23 +20,32 @@ function drawObstacles() {
 }
 
 class Player {
-    constructor(startX, startY, color, startDir, fKey, rrKey, rlKey) {
+    constructor(startX, startY, color, startDir, forward, right, left, fire) {
         this.x = startX * scale;
         this.y = startY * scale;
         this.score = 0;
         this.color = color;
         this.dir = startDir;
         this.hitbox = 9 * scale;
-        this.fKey = fKey;
-        this.rrKey = rrKey;
-        this.rlKey = rlKey;
+        this.forward = forward;
+        this.right = right;
+        this.left = left;
+        this.fire = fire;
+
+        this.bullet = {
+            x: null,
+            y: null,
+            dir: null,
+            remainingDistance: 0
+        }
 
     }
 
     initializeActionMap() {
-        keyActionMap.set(this.fKey, [this, this.moveForward]);
-        keyActionMap.set(this.rrKey, [this, this.rotateRight]);
-        keyActionMap.set(this.rlKey, [this, this.rotateLeft]);
+        keyActionMap.set(this.forward, [this, this.moveForward]);
+        keyActionMap.set(this.right, [this, this.rotateRight]);
+        keyActionMap.set(this.left, [this, this.rotateLeft]);
+        keyActionMap.set(this.fire, [this, this.initBullet]);
     }
 
 
@@ -49,8 +58,44 @@ class Player {
     drawPlayer() {
         ctx.fillStyle = this.color;
         this.drawShapes(this.dir);
+        this.drawBullet();
+    }
+
+    initBullet() {
+        this.bullet.x = this.x;
+        this.bullet.y = this.y;
+        this.bullet.dir = this.dir;
+        this.bullet.remainingDistance = 30;
+    }
+    drawBullet() {
+
+        let speed = 1
+        if (this.bullet.remainingDistance > 0) {
 
 
+
+            let newX = this.bullet.x + (moveXMap.get(this.bullet.dir) * scale * speed);
+            let newY = this.bullet.y + (moveYMap.get(this.bullet.dir) * scale * speed);
+
+            if (this.willCollideObstacle(newX, newY)) {
+                this.bullet.remainingDistance = 0;
+            } else if (this.willCollidePlayer(newX, newY)) {
+                // handle collission
+            } else {
+                this.bullet.x = Math.floor(newX);
+                this.bullet.y = Math.floor(newY);
+
+                ctx.fillRect(this.bullet.x, this.bullet.y, scale, scale);
+
+                this.bullet.remainingDistance--;
+            }
+
+            this.x = Math.floor(this.x);
+            this.y = Math.floor(this.y);
+
+
+
+        }
     }
 
     rotateLeft() {
@@ -76,20 +121,7 @@ class Player {
 
     }
 
-    willCollideWall(x, y) {
 
-        for (const [obstX, obstY, obstW, obstH] of obstacles) {
-            if (x < obstX * scale + obstW * scale &&
-                x + this.hitbox - scale > obstX * scale &&
-                y < obstY * scale + obstH * scale &&
-                y + this.hitbox - scale > obstY * scale) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
 
     willCollidePlayer(x, y) {
 
@@ -112,13 +144,14 @@ class Player {
 
 
     moveForward() {
+        let speed = 0.75;
 
-        let newX = this.x + (moveXMap.get(this.dir) * scale);
-        let newY = this.y + (moveYMap.get(this.dir) * scale);
+        let newX = this.x + (moveXMap.get(this.dir) * scale * speed);
+        let newY = this.y + (moveYMap.get(this.dir) * scale * speed);
 
-        if (this.willCollideObstacle(newX, newY) || this.willCollideWall(newX, newY) || this.willCollidePlayer(newX, newY)) {
-            this.x -= 3 * moveXMap.get(this.dir) * scale;
-            this.y -= 3 * moveYMap.get(this.dir) * scale;
+        if (this.willCollideObstacle(newX, newY) || this.willCollidePlayer(newX, newY)) {
+            this.x -= 3 * moveXMap.get(this.dir) * scale * speed;
+            this.y -= 3 * moveYMap.get(this.dir) * scale * speed;
         } else {
             this.x = newX;
             this.y = newY;
@@ -173,7 +206,7 @@ function game() {
 }
 
 
-const players = [new Player(10, 61, "#b0e070", e, 'w', 'd', 'a'), new Player(141, 60, "#d0d040", w, 'p', "'", "l")];
+const players = [new Player(10, 61, "#b0e070", e, 'w', 'd', 'a', 'c'), new Player(141, 60, "#d0d040", w, 'p', "'", 'l', ',')];
 players.forEach(function (player) {
     player.initializeActionMap();
 });
