@@ -36,3 +36,32 @@ document.addEventListener("keyup", (e) => {
 
     }
 })
+
+
+
+
+
+document.onkeydown = function (e) {
+    //  console.log(e.key)
+    switch (e.key.toLowerCase()) {
+        case 'a':
+            players[0].rotateLeft();
+            break;
+        case 'd':
+            players[0].rotateRight();
+            break;
+        case 'w':
+            players[0].moveForward();
+            break;
+        case 'l':
+            players[1].rotateLeft();
+            break;
+        case "'":
+            players[1].rotateRight();
+            break;
+        case 'p':
+            players[1].moveForward();
+            break;
+    }
+
+};

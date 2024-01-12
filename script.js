@@ -5,6 +5,9 @@ const ctx = canvas.getContext('2d');
 
 const scale = 10;
 
+const pressedKeys = new Set();
+const keyActionMap = new Map();
+
 const obstacles = [
     [0, 8, 160, 5],
     [0, 115, 160, 5],
@@ -111,14 +114,23 @@ function drawObstacles() {
 }
 
 class Player {
-    constructor(startX, startY, color, startDir) {
+    constructor(startX, startY, color, startDir, fKey, rrKey, rlKey) {
         this.x = startX * scale;
         this.y = startY * scale;
         this.score = 0;
         this.color = color;
         this.dir = startDir;
         this.hitbox = 9 * scale;
+        this.fKey = fKey;
+        this.rrKey = rrKey;
+        this.rlKey = rlKey;
 
+    }
+
+    initializeActionMap() {
+        keyActionMap.set(this.fKey, [this, this.moveForward]);
+        keyActionMap.set(this.rrKey, [this, this.rotateRight]);
+        keyActionMap.set(this.rlKey, [this, this.rotateLeft]);
     }
 
     drawPoint(x, y) {
@@ -410,7 +422,7 @@ class Player {
     willCollidePlayer(x, y) {
 
         const thisPlayer = this;
-        var collision = false;
+        let collision = false;
         players.forEach(function (otherPlayer) {
 
             if (!collision && otherPlayer != thisPlayer && x < otherPlayer.x + otherPlayer.hitbox &&
@@ -429,8 +441,8 @@ class Player {
 
     moveForward() {
 
-        var newX = this.x + (moveXMap.get(this.dir) * scale);
-        var newY = this.y + (moveYMap.get(this.dir) * scale);
+        let newX = this.x + (moveXMap.get(this.dir) * scale);
+        let newY = this.y + (moveYMap.get(this.dir) * scale);
 
         if (this.willCollideObstacle(newX, newY) || this.willCollideWall(newX, newY) || this.willCollidePlayer(newX, newY)) {
             this.x -= 3 * moveXMap.get(this.dir) * scale;
@@ -453,31 +465,21 @@ class Player {
 
 
 document.onkeydown = function (e) {
-    //  console.log(e.key)
-    switch (e.key.toLowerCase()) {
-        case 'a':
-            players[0].rotateLeft();
-            break;
-        case 'd':
-            players[0].rotateRight();
-            break;
-        case 'w':
-            players[0].moveForward();
-            break;
-        case 'l':
-            players[1].rotateLeft();
-            break;
-        case "'":
-            players[1].rotateRight();
-            break;
-        case 'p':
-            players[1].moveForward();
-            break;
-    }
+    pressedKeys.add(e.key.toLowerCase());
+};
 
+document.onkeyup = function (e) {
+    pressedKeys.delete(e.key.toLowerCase());
 };
 
 
+function processKeys() {
+    pressedKeys.forEach(function (key) {
+        if (keyActionMap.has(key)) {
+            keyActionMap.get(key)[1].call(keyActionMap.get(key)[0])
+        }
+    });
+}
 
 
 
@@ -485,7 +487,7 @@ document.onkeydown = function (e) {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawObstacles();
-
+    processKeys();
 
     players.forEach(function (player) {
         player.drawPlayer();
@@ -493,11 +495,16 @@ function render() {
 }
 function game() {
     render();
-    window.requestAnimationFrame(game);
+    setTimeout(() => {
+        window.requestAnimationFrame(game);
+    }, 80);
 }
 
 
-const players = [new Player(10, 61, "#b0e070", 'e'), new Player(141, 60, "#d0d040", 'w')];
+const players = [new Player(10, 61, "#b0e070", 'e', 'w', 'd', 'a'), new Player(141, 60, "#d0d040", 'w', 'p', 'l', "'")];
+players.forEach(function (player) {
+    player.initializeActionMap();
+});
 window.requestAnimationFrame(game);
 
 
