@@ -6,11 +6,11 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 ### Todo
 
 - [ ] Clean up code
+- [ ] Graphics in separate file
 - [ ] Firing ability
 - [ ] Firing displacing victim
 - [ ] Score keeping
-- [ ] Multiple keypresses at once
-- [ ] Graphics in separate file
+- [ ] Investigate making simultaneous keypresses more elegant
 - [ ] Local multiplayer
 - [ ] Online multiplayer
 - [ ] Perfect favicon
@@ -26,3 +26,4 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 - [x] Collision between players
 - [x] Collision with walls
 - [x] Add favicon
+- [x] Multiple keypresses at once
