@@ -62,10 +62,12 @@ class Player {
     }
 
     initBullet() {
-        this.bullet.x = this.x + (scale * bulletCoords.get(this.dir)[0]);
-        this.bullet.y = this.y + (scale * bulletCoords.get(this.dir)[1]);
-        this.bullet.dir = this.dir;
-        this.bullet.remainingDistance = 30;
+        if (this.bullet.remainingDistance == 0) {
+            this.bullet.x = this.x + (scale * bulletCoords.get(this.dir)[0]);
+            this.bullet.y = this.y + (scale * bulletCoords.get(this.dir)[1]);
+            this.bullet.dir = this.dir;
+            this.bullet.remainingDistance = 30;
+        }
     }
     drawBullet() {
 
@@ -90,8 +92,7 @@ class Player {
                 this.bullet.remainingDistance--;
             }
 
-            this.x = Math.floor(this.x);
-            this.y = Math.floor(this.y);
+
 
 
 
