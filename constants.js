@@ -1,8 +1,17 @@
-const scale = 10;
+// nums & colors
+
+const SCALE = 10;
+const PLAYER_HITBOX = 8;
+const BULLET_HITBOX = 1.5;
+const BULLET_DISTANCE = 30;
+const BULLET_SPEED = 1;
+const PLAYER_SPEED = 0.75;
+const OBSTACLE_COLOR = "#286898";
+
 
 // shapes
 
-const obstacles = [
+const OBSTACLES = [
     [0, 8, 160, 5],
     [0, 115, 160, 5],
     [0, 13, 4, 102],
@@ -19,7 +28,7 @@ const obstacles = [
     [132, 55, 4, 18]];
 
 
-const nne = [
+const NNE = [
     [0, 3, 8, 2],
     [4, 5, 3, 2],
     [1, 1, 2, 2],
@@ -31,7 +40,7 @@ const nne = [
     [5, 7, 1, 1]
 ]
 
-const ese = [
+const ESE = [
     [3, 0, 2, 8],
     [1, 4, 2, 3],
     [5, 1, 2, 2],
@@ -43,7 +52,7 @@ const ese = [
     [5, 7, 1, 1]
 ]
 
-const ssw = [
+const SSW = [
     [0, 3, 8, 2],
     [1, 1, 3, 2],
     [5, 5, 2, 2],
@@ -55,7 +64,7 @@ const ssw = [
     [5, 7, 1, 1]
 ]
 
-const wnw = [
+const WNW = [
     [3, 0, 2, 8],
     [5, 1, 2, 3],
     [1, 5, 2, 2],
@@ -67,7 +76,7 @@ const wnw = [
     [5, 6, 1, 1]
 ]
 
-const ene = [
+const ENE = [
     [3, 0, 2, 8],
     [1, 1, 2, 3],
     [5, 5, 2, 2],
@@ -79,7 +88,7 @@ const ene = [
     [2, 6, 1, 1]
 ]
 
-const sse = [
+const SSE = [
     [0, 3, 8, 2],
     [4, 1, 3, 2],
     [1, 5, 2, 2],
@@ -91,7 +100,7 @@ const sse = [
     [7, 5, 1, 1]
 ]
 
-const wsw = [
+const WSW = [
     [3, 0, 2, 8],
     [5, 4, 2, 3],
     [1, 1, 2, 2],
@@ -103,7 +112,7 @@ const wsw = [
     [7, 5, 1, 1]
 ]
 
-const nnw = [
+const NNW = [
     [0, 3, 8, 2],
     [1, 5, 3, 2],
     [5, 1, 2, 2],
@@ -115,31 +124,31 @@ const nnw = [
     [2, 7, 1, 1]
 ]
 
-const e = [
+const E = [
     [0, 0, 6, 2],
     [0, 5, 6, 2],
     [2, 2, 3, 3],
     [5, 3, 3, 1]
 ]
-const w = [
+const W = [
     [2, 0, 6, 2],
     [2, 5, 6, 2],
     [3, 2, 3, 3],
     [0, 3, 3, 1]
 ]
-const s = [
+const S = [
     [0, 0, 2, 6],
     [5, 0, 2, 6],
     [2, 2, 3, 3],
     [3, 5, 1, 3]
 ]
-const n = [
+const N = [
     [0, 2, 2, 6],
     [5, 2, 2, 6],
     [2, 3, 3, 3],
     [3, 0, 1, 3]
 ]
-const ne = [
+const NE = [
     [3, 3, 5, 2],
     [3, 0, 2, 3],
     [1, 2, 2, 2],
@@ -169,7 +178,7 @@ const nw = [
     [1, 5, 1, 1],
     [3, 7, 1, 1]
 ]
-const sw = [
+const SW = [
     [0, 3, 5, 2],
     [3, 5, 2, 3],
     [2, 1, 2, 2],
@@ -184,7 +193,7 @@ const sw = [
     [1, 6, 1, 1],
     [2, 5, 1, 1]
 ]
-const se = [
+const SE = [
     [3, 3, 2, 5],
     [5, 3, 3, 2],
     [4, 1, 2, 2],
@@ -201,99 +210,99 @@ const se = [
 
 
 // bullet positions
-const bulletCoords = new Map([
-    [n, [3, 0]],
-    [nnw, [2, 0]],
+const BULLET_COORDS = new Map([
+    [N, [3, 0]],
+    [NNW, [2, 0]],
     [nw, [0, 0]],
-    [wnw, [0, 2]],
-    [w, [0, 3]],
-    [wsw, [0, 5]],
-    [sw, [0, 7]],
-    [ssw, [2, 7]],
-    [s, [3, 7]],
-    [sse, [5, 7]],
-    [se, [7, 7]],
-    [ese, [7, 5]],
-    [e, [7, 3]],
-    [ene, [7, 2]],
-    [ne, [7, 0]],
-    [nne, [5, 0]]
+    [WNW, [0, 2]],
+    [W, [0, 3]],
+    [WSW, [0, 5]],
+    [SW, [0, 7]],
+    [SSW, [2, 7]],
+    [S, [3, 7]],
+    [SSE, [5, 7]],
+    [SE, [7, 7]],
+    [ESE, [7, 5]],
+    [E, [7, 3]],
+    [ENE, [7, 2]],
+    [NE, [7, 0]],
+    [NNE, [5, 0]]
 ]);
 
 
 // rotation
-const rotateLeftMap = new Map([
-    [n, nnw],
-    [nnw, nw],
-    [nw, wnw],
-    [wnw, w],
-    [w, wsw],
-    [wsw, sw],
-    [sw, ssw],
-    [ssw, s],
-    [s, sse],
-    [sse, se],
-    [se, ese],
-    [ese, e],
-    [e, ene],
-    [ene, ne],
-    [ne, nne],
-    [nne, n]
+const ROTATE_LEFT_MAP = new Map([
+    [N, NNW],
+    [NNW, nw],
+    [nw, WNW],
+    [WNW, W],
+    [W, WSW],
+    [WSW, SW],
+    [SW, SSW],
+    [SSW, S],
+    [S, SSE],
+    [SSE, SE],
+    [SE, ESE],
+    [ESE, E],
+    [E, ENE],
+    [ENE, NE],
+    [NE, NNE],
+    [NNE, N]
 ]);
 
-const rotateRightMap = new Map([
-    [n, nne],
-    [nne, ne],
-    [ne, ene],
-    [ene, e],
-    [e, ese],
-    [ese, se],
-    [se, sse],
-    [sse, s],
-    [s, ssw],
-    [ssw, sw],
-    [sw, wsw],
-    [wsw, w],
-    [w, wnw],
-    [wnw, nw],
-    [nw, nnw],
-    [nnw, n]
+const ROTATE_RIGHT_MAP = new Map([
+    [N, NNE],
+    [NNE, NE],
+    [NE, ENE],
+    [ENE, E],
+    [E, ESE],
+    [ESE, SE],
+    [SE, SSE],
+    [SSE, S],
+    [S, SSW],
+    [SSW, SW],
+    [SW, WSW],
+    [WSW, W],
+    [W, WNW],
+    [WNW, nw],
+    [nw, NNW],
+    [NNW, N]
 ]);
 
-const moveXMap = new Map([
-    [n, 0],
-    [nne, 0.45],
-    [ne, 1],
-    [ene, 0.9],
-    [e, 1],
-    [ese, 0.9],
-    [se, 1],
-    [sse, 0.45],
-    [s, 0],
-    [ssw, -0.45],
-    [sw, -1],
-    [wsw, -0.9],
-    [w, -1],
-    [wnw, -0.9],
+const MOVE_X_MAP = new Map([
+    [N, 0],
+    [NNE, 0.45],
+    [NE, 1],
+    [ENE, 0.9],
+    [E, 1],
+    [ESE, 0.9],
+    [SE, 1],
+    [SSE, 0.45],
+    [S, 0],
+    [SSW, -0.45],
+    [SW, -1],
+    [WSW, -0.9],
+    [W, -1],
+    [WNW, -0.9],
     [nw, -1],
-    [nnw, -0.45]
+    [NNW, -0.45]
 ]);
 
-const moveYMap = new Map([
-    [n, -1],
-    [nne, -0.9],
-    [ne, -1],
-    [ene, -0.45],
-    [e, 0],
-    [ese, 0.45],
-    [se, 1],
-    [sse, 0.9],
-    [s, 1],
-    [ssw, 0.9],
-    [sw, 1],
-    [wsw, 0.45],
-    [w, 0],
-    [wnw, -0.45],
+const MOVE_Y_MAP = new Map([
+    [N, -1],
+    [NNE, -0.9],
+    [NE, -1],
+    [ENE, -0.45],
+    [E, 0],
+    [ESE, 0.45],
+    [SE, 1],
+    [SSE, 0.9],
+    [S, 1],
+    [SSW, 0.9],
+    [SW, 1],
+    [WSW, 0.45],
+    [W, 0],
+    [WNW, -0.45],
     [nw, -1],
-    [nnw, -0.9]
+    [NNW, -0.9]
 ]);

@@ -8,7 +8,7 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 - [ ] Clean up code
 - [ ] Graphics in separate file
 - [ ] Fix firing in weird directions, figure out speed and distance
-- [ ] Firing displacing victim
+- [ ] Firing displacing victim (perp rotates one CCW, then dir of victim is opposite their current dir plus the perp's dir, roatation leaves victim 3 dirs CW)
 - [ ] Score keeping
 - [ ] Investigate making simultaneous keypresses more elegant / fix over-rotation
 - [ ] Local multiplayer
