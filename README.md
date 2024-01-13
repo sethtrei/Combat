@@ -7,7 +7,7 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 
 - [ ] Clean up code
 - [ ] Graphics in separate file
-- [ ] Firing ability
+- [ ] Fix firing in weird directions, figure out speed and distance
 - [ ] Firing displacing victim
 - [ ] Score keeping
 - [ ] Investigate making simultaneous keypresses more elegant / fix over-rotation
@@ -28,3 +28,4 @@ Play it <a href="http://sethtrei.github.io/Combat" target="_blank">here</a>
 - [x] Collision with walls
 - [x] Add favicon
 - [x] Multiple keypresses at once
+- [x] Firing ability
