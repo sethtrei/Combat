@@ -199,6 +199,28 @@ const se = [
     [6, 6, 1, 1],
     [7, 7, 1, 1]]
 
+
+// bullet positions
+const bulletCoords = new Map([
+    [n, [3, 0]],
+    [nnw, [2, 0]],
+    [nw, [0, 0]],
+    [wnw, [0, 2]],
+    [w, [0, 3]],
+    [wsw, [0, 5]],
+    [sw, [0, 7]],
+    [ssw, [2, 7]],
+    [s, [3, 7]],
+    [sse, [5, 7]],
+    [se, [7, 7]],
+    [ese, [7, 5]],
+    [e, [7, 3]],
+    [ene, [7, 2]],
+    [ne, [7, 0]],
+    [nne, [5, 0]]
+]);
+
+
 // rotation
 const rotateLeftMap = new Map([
     [n, nnw],
