@@ -5,7 +5,7 @@ const PLAYER_HITBOX = 8;
 const BULLET_HITBOX = 1.5;
 const BULLET_DISTANCE = 30;
 const BULLET_SPEED = 1;
-const PLAYER_SPEED = 0.75;
+const PLAYER_SPEED = 2; // origionally .75
 const OBSTACLE_COLOR = "#286898";
 
 
@@ -163,7 +163,7 @@ const NE = [
     [6, 5, 1, 1],
     [4, 7, 1, 1]
 ]
-const nw = [
+const NW = [
     [3, 0, 2, 5],
     [0, 3, 3, 2],
     [2, 5, 2, 2],
@@ -213,7 +213,7 @@ const SE = [
 const BULLET_COORDS = new Map([
     [N, [3, 0]],
     [NNW, [2, 0]],
-    [nw, [0, 0]],
+    [NW, [0, 0]],
     [WNW, [0, 2]],
     [W, [0, 3]],
     [WSW, [0, 5]],
@@ -233,8 +233,8 @@ const BULLET_COORDS = new Map([
 // rotation
 const ROTATE_LEFT_MAP = new Map([
     [N, NNW],
-    [NNW, nw],
-    [nw, WNW],
+    [NNW, NW],
+    [NW, WNW],
     [WNW, W],
     [W, WSW],
     [WSW, SW],
@@ -264,9 +264,48 @@ const ROTATE_RIGHT_MAP = new Map([
     [SW, WSW],
     [WSW, W],
     [W, WNW],
-    [WNW, nw],
-    [nw, NNW],
+    [WNW, NW],
+    [NW, NNW],
     [NNW, N]
+]);
+
+
+const OPPOSITE_DIR_MAP = new Map([
+    [N, S],
+    [NNE, SSW],
+    [NE, SW],
+    [ENE, WSW],
+    [E, W],
+    [ESE, WNW],
+    [SE, NW],
+    [SSE, NNW],
+    [S, N],
+    [SSW, NNE],
+    [SW, NE],
+    [WSW, ENE],
+    [W, E],
+    [WNW, ESE],
+    [NW, SE],
+    [NNW, SSE]
+]);
+
+const DEGREE_MAP = new Map([
+    [N, 0],
+    [NNE, 22.5],
+    [NE, 45],
+    [ENE, 67.5],
+    [E, 90],
+    [ESE, 112.5],
+    [SE, 135],
+    [SSE, 157.5],
+    [S, 180],
+    [SSW, 202.5],
+    [SW, 225],
+    [WSW, 247.5],
+    [W, 270],
+    [WNW, 292.5],
+    [NW, 315],
+    [NNW, 337.5]
 ]);
 
 const MOVE_X_MAP = new Map([
@@ -284,7 +323,7 @@ const MOVE_X_MAP = new Map([
     [WSW, -0.9],
     [W, -1],
     [WNW, -0.9],
-    [nw, -1],
+    [NW, -1],
     [NNW, -0.45]
 ]);
 
@@ -303,6 +342,6 @@ const MOVE_Y_MAP = new Map([
     [WSW, 0.45],
     [W, 0],
     [WNW, -0.45],
-    [nw, -1],
+    [NW, -1],
     [NNW, -0.9]
 ]);

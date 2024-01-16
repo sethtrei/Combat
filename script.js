@@ -7,6 +7,7 @@ const ctx = canvas.getContext('2d');
 const pressedKeys = new Set();
 const keyActionMap = new Map();
 
+let inputActive = true;
 
 
 
@@ -47,7 +48,8 @@ function willCollidePlayer(x, y, hitbox, thisPlayer) {
             x + hitbox > otherPlayer.x &&
             y < otherPlayer.y + otherPlayer.hitbox &&
             y + hitbox > otherPlayer.y) {
-            collision = true;
+            return otherPlayer;
+
         }
     });
 
@@ -63,11 +65,14 @@ class Player {
         this.score = 0;
         this.color = color;
         this.dir = startDir;
+        this.shotMoveAnimation = 0;
+        this.shotRotateAnimation = 0;
         this.hitbox = PLAYER_HITBOX * SCALE;
         this.forward = forward;
         this.right = right;
         this.left = left;
         this.fire = fire;
+
 
         this.bullet = {
             x: null,
@@ -94,9 +99,24 @@ class Player {
 
     }
     drawPlayer() {
+
         ctx.fillStyle = this.color;
+
+        if (this.shotMoveAnimation != 0) {
+            this.moveForward();
+            this.shotMoveAnimation--;
+        } else if (this.shotRotateAnimation != 0) {
+            this.rotateRight();
+
+            if (--this.shotRotateAnimation == 0) {
+                inputActive = true;
+            }
+        }
+
+
         this.drawShapes(this.dir);
         this.drawBullet();
+
     }
 
     initBullet() {
@@ -116,10 +136,19 @@ class Player {
             let newX = this.bullet.x + (MOVE_X_MAP.get(this.bullet.dir) * SCALE * BULLET_SPEED);
             let newY = this.bullet.y + (MOVE_Y_MAP.get(this.bullet.dir) * SCALE * BULLET_SPEED);
 
-            if (willCollideObstacle(newX, newY, this.bullet.hitbox)) {
+            let playerShot = willCollidePlayer(newX, newY, this.bullet.hitbox, this);
+            if (playerShot) {
                 this.bullet.remainingDistance = 0;
-            } else if (willCollidePlayer(newX, newY, this.bullet.hitbox, this)) {
-                // handle
+                this.rotateLeft();
+                inputActive = false;
+                playerShot.shotMoveAnimation = 8;
+                playerShot.shotRotateAnimation = 8;
+                newDirAngle = Math.floor((Math.abs(DEGREE_MAP.get(this.dir) - DEGREE_MAP.get(playerShot.dir)) / 2) + Math.min(DEGREE_MAP.get(this.dir), DEGREE_MAP.get(playerShot.dir)))
+                // FINISH ANGLE!
+                //playerShot.dir = Math.floor((Math.abs(DEGREE_MAP.get(this.dir) - DEGREE_MAP.get(playerShot.dir))/2) + )
+
+            } else if (willCollideObstacle(newX, newY, this.bullet.hitbox)) {
+                this.bullet.remainingDistance = 0;
             } else {
                 this.bullet.x = Math.floor(newX);
                 this.bullet.y = Math.floor(newY);
@@ -184,7 +213,7 @@ document.onkeyup = function (e) {
 
 function processKeys() {
     pressedKeys.forEach(function (key) {
-        if (keyActionMap.has(key)) {
+        if (inputActive && keyActionMap.has(key)) {
             keyActionMap.get(key)[1].call(keyActionMap.get(key)[0])
         }
     });
