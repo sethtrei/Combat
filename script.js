@@ -11,6 +11,7 @@ let inputActive = true;
 
 
 
+
 function drawObstacles() {
     ctx.fillStyle = OBSTACLE_COLOR;
 
@@ -41,19 +42,19 @@ function willCollideObstacle(x, y, hitbox) {
 function willCollidePlayer(x, y, hitbox, thisPlayer) {
 
     // friendly fire purposely allowed ?
-    let collision = false;
+    let victim = null;
     players.forEach(function (otherPlayer) {
 
-        if (!collision && otherPlayer != thisPlayer && x < otherPlayer.x + otherPlayer.hitbox &&
+        if (!victim && otherPlayer != thisPlayer && x < otherPlayer.x + otherPlayer.hitbox &&
             x + hitbox > otherPlayer.x &&
             y < otherPlayer.y + otherPlayer.hitbox &&
             y + hitbox > otherPlayer.y) {
-            return otherPlayer;
+            victim = otherPlayer;
 
         }
     });
 
-    return collision;
+    return victim;
 
 }
 
@@ -137,15 +138,18 @@ class Player {
             let newY = this.bullet.y + (MOVE_Y_MAP.get(this.bullet.dir) * SCALE * BULLET_SPEED);
 
             let playerShot = willCollidePlayer(newX, newY, this.bullet.hitbox, this);
+
             if (playerShot) {
                 this.bullet.remainingDistance = 0;
                 this.rotateLeft();
                 inputActive = false;
-                playerShot.shotMoveAnimation = 8;
-                playerShot.shotRotateAnimation = 8;
-                newDirAngle = Math.floor((Math.abs(DEGREE_MAP.get(this.dir) - DEGREE_MAP.get(playerShot.dir)) / 2) + Math.min(DEGREE_MAP.get(this.dir), DEGREE_MAP.get(playerShot.dir)))
+                playerShot.shotMoveAnimation = SHOT_DISTANCE;
+                playerShot.shotRotateAnimation = SHOT_ROTATION_COUNT;
+
+                //newDirAngle = Math.min(Math.floor((Math.abs(DEGREE_MAP.get(this.dir) - DEGREE_MAP.get(playerShot.dir)) / 2)) + Math.min(DEGREE_MAP.get(this.dir), DEGREE_MAP.get(playerShot.dir)))
                 // FINISH ANGLE!
                 //playerShot.dir = Math.floor((Math.abs(DEGREE_MAP.get(this.dir) - DEGREE_MAP.get(playerShot.dir))/2) + )
+                // ANGLE ON BACKBURNER
 
             } else if (willCollideObstacle(newX, newY, this.bullet.hitbox)) {
                 this.bullet.remainingDistance = 0;
@@ -181,7 +185,6 @@ class Player {
 
         let newX = this.x + (MOVE_X_MAP.get(this.dir) * SCALE * PLAYER_SPEED);
         let newY = this.y + (MOVE_Y_MAP.get(this.dir) * SCALE * PLAYER_SPEED);
-
         if (willCollideObstacle(newX, newY, this.hitbox) || willCollidePlayer(newX, newY, this.hitbox, this)) {
             this.x -= 3 * MOVE_X_MAP.get(this.dir) * SCALE * PLAYER_SPEED;
             this.y -= 3 * MOVE_Y_MAP.get(this.dir) * SCALE * PLAYER_SPEED;
@@ -235,7 +238,7 @@ function game() {
     render();
     setTimeout(() => {
         window.requestAnimationFrame(game);
-    }, 80);
+    }, inputActive ? NORMAL_GAME_SPEED : FAST_GAME_SPEED);
 }
 
 

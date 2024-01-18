@@ -7,6 +7,10 @@ const BULLET_DISTANCE = 30;
 const BULLET_SPEED = 1;
 const PLAYER_SPEED = 2; // origionally .75
 const OBSTACLE_COLOR = "#286898";
+const NORMAL_GAME_SPEED = 80;
+const FAST_GAME_SPEED = 20;
+const SHOT_DISTANCE = 8;
+const SHOT_ROTATION_COUNT = 72;
 
 
 // shapes
