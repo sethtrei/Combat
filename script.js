@@ -1,64 +1,4 @@
 
-
-const canvas = document.getElementById("pong");
-
-const ctx = canvas.getContext('2d');
-
-const pressedKeys = new Set();
-const keyActionMap = new Map();
-
-let inputActive = true;
-
-
-
-
-function drawObstacles() {
-    ctx.fillStyle = OBSTACLE_COLOR;
-
-    for (const [x, y, w, h] of OBSTACLES) {
-
-        ctx.fillRect(x * SCALE, y * SCALE, w * SCALE, h * SCALE);
-    }
-}
-
-
-function willCollideObstacle(x, y, hitbox) {
-
-    for (const [obstX, obstY, obstW, obstH] of OBSTACLES) {
-        if (x < obstX * SCALE + obstW * SCALE &&
-            x + hitbox - SCALE > obstX * SCALE &&
-            y < obstY * SCALE + obstH * SCALE &&
-            y + hitbox - SCALE > obstY * SCALE) {
-            return true;
-        }
-    }
-
-    return false;
-
-}
-
-
-
-function willCollidePlayer(x, y, hitbox, thisPlayer) {
-
-    // friendly fire purposely allowed ?
-    let victim = null;
-    players.forEach(function (otherPlayer) {
-
-        if (!victim && otherPlayer != thisPlayer && x < otherPlayer.x + otherPlayer.hitbox &&
-            x + hitbox > otherPlayer.x &&
-            y < otherPlayer.y + otherPlayer.hitbox &&
-            y + hitbox > otherPlayer.y) {
-            victim = otherPlayer;
-
-        }
-    });
-
-    return victim;
-
-}
-
-
 class Player {
     constructor(startX, startY, color, startDir, forward, right, left, fire) {
         this.x = startX * SCALE;
@@ -85,29 +25,55 @@ class Player {
 
     }
 
-    initializeActionMap() {
-        keyActionMap.set(this.forward, [this, this.moveForward]);
-        keyActionMap.set(this.right, [this, this.rotateRight]);
-        keyActionMap.set(this.left, [this, this.rotateLeft]);
-        keyActionMap.set(this.fire, [this, this.initBullet]);
+    willCollideObstacle(x, y, hitbox) {
+
+        for (const [obstX, obstY, obstW, obstH] of OBSTACLES) {
+            if (x < obstX * SCALE + obstW * SCALE &&
+                x + hitbox - SCALE > obstX * SCALE &&
+                y < obstY * SCALE + obstH * SCALE &&
+                y + hitbox - SCALE > obstY * SCALE) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    willCollidePlayer(x, y, hitbox, thisPlayer, otherPlayer) {
+
+        // friendly fire purposely allowed ?
+        let victim = null;
+
+        if (!victim && otherPlayer != thisPlayer && x < otherPlayer.x + otherPlayer.hitbox &&
+            x + hitbox > otherPlayer.x &&
+            y < otherPlayer.y + otherPlayer.hitbox &&
+            y + hitbox > otherPlayer.y) {
+            victim = otherPlayer;
+
+        }
+
+
+        return victim;
+
     }
 
 
-    drawShapes(shapes) {
+    drawShapes(shapes, ctx) {
         for (const [x, y, w, h] of shapes) {
             ctx.fillRect(this.x + (x * SCALE), this.y + (y * SCALE), w * SCALE, h * SCALE);
         }
 
     }
-    drawPlayer() {
+    drawPlayer(ctx, otherPlayer) {
 
         ctx.fillStyle = this.color;
 
         if (this.shotMoveAnimation != 0) {
-            this.moveForward();
+            this.moveForward(otherPlayer);
             this.shotMoveAnimation--;
         } else if (this.shotRotateAnimation != 0) {
-            this.rotateRight();
+            this.rotateRightotherPlayer
 
             if (--this.shotRotateAnimation == 0) {
                 inputActive = true;
@@ -115,8 +81,8 @@ class Player {
         }
 
 
-        this.drawShapes(this.dir);
-        this.drawBullet();
+        this.drawShapes(this.dir, ctx);
+        this.drawBullet(otherPlayer);
 
     }
 
@@ -128,7 +94,7 @@ class Player {
             this.bullet.remainingDistance = BULLET_DISTANCE;
         }
     }
-    drawBullet() {
+    drawBullet(otherPlayer) {
 
         if (this.bullet.remainingDistance > 0) {
 
@@ -137,7 +103,7 @@ class Player {
             let newX = this.bullet.x + (MOVE_X_MAP.get(this.bullet.dir) * SCALE * BULLET_SPEED);
             let newY = this.bullet.y + (MOVE_Y_MAP.get(this.bullet.dir) * SCALE * BULLET_SPEED);
 
-            let playerShot = willCollidePlayer(newX, newY, this.bullet.hitbox, this);
+            let playerShot = willCollidePlayer(newX, newY, this.bullet.hitbox, otherPlayer);
 
             if (playerShot) {
                 this.bullet.remainingDistance = 0;
@@ -181,11 +147,11 @@ class Player {
 
 
 
-    moveForward() {
+    moveForward(otherPlayer) {
 
         let newX = this.x + (MOVE_X_MAP.get(this.dir) * SCALE * PLAYER_SPEED);
         let newY = this.y + (MOVE_Y_MAP.get(this.dir) * SCALE * PLAYER_SPEED);
-        if (willCollideObstacle(newX, newY, this.hitbox) || willCollidePlayer(newX, newY, this.hitbox, this)) {
+        if (this.willCollideObstacle(newX, newY, this.hitbox) || this.willCollidePlayer(newX, newY, this.hitbox, this, otherPlayer)) {
             this.x -= 3 * MOVE_X_MAP.get(this.dir) * SCALE * PLAYER_SPEED;
             this.y -= 3 * MOVE_Y_MAP.get(this.dir) * SCALE * PLAYER_SPEED;
         } else {
@@ -202,54 +168,93 @@ class Player {
 
 
 
+
+
+
+
+
+
 }
 
 
-document.onkeydown = function (e) {
-    pressedKeys.add(e.key.toLowerCase());
-};
+class CombatGame extends netplayjs.Game {
+    // NetplayJS games use a fixed timestep.
+    static timestep = 1000 / 60;
 
-document.onkeyup = function (e) {
-    pressedKeys.delete(e.key.toLowerCase());
-};
+    // NetplayJS games use a fixed canvas size.
+    static canvasSize = { width: 1600, height: 1200 };
 
+    // Initialize the game state.
+    constructor(canvas, players) {
+        super();
+        this.players = [new Player(10, 61, "#b0e070", E, 'w', 'd', 'a', 'c'), new Player(141, 60, "#d0d040", W, 'p', "'", 'l', ',')];
+    }
 
-function processKeys() {
-    pressedKeys.forEach(function (key) {
-        if (inputActive && keyActionMap.has(key)) {
-            keyActionMap.get(key)[1].call(keyActionMap.get(key)[0])
+    // Tick the game state forward given the inputs for each player.
+    tick(playerInputs) {
+        // right now doesnt matter what player presses what key but will need to fix eventually
+        for (const [player, input] of playerInputs.entries()) {
+            if (input.keysHeld.w) {
+                this.players[0].moveForward(this.players[1]);
+            }
+            if (input.keysHeld.d) {
+                this.players[0].rotateRight();
+            }
+            if (input.keysHeld.a) {
+                this.players[0].rotateLeft();
+            }
+            if (input.keysHeld.i) {
+                this.players[1].moveForward(this.players[0]);
+            }
+            if (input.keysHeld.l) {
+                this.players[1].rotateRight();
+            }
+            if (input.keysHeld.j) {
+                this.players[1].rotateLeft();
+            }
         }
-    });
+    }
+
+    // Draw the current state of the game to a canvas.
+    draw(canvas) {
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        this.drawObstacles(canvas.getContext('2d'));
+
+        this.players[0].drawPlayer(canvas.getContext('2d'), this.players[1]);
+        this.players[1].drawPlayer(canvas.getContext('2d'), this.players[0]);
+    }
+
+    // Serialize the state of a game to JSON-compatible value.
+    serialize() {
+        const myObj = { p1x: this.players[0].x, p2x: this.players[1].x, p1y: this.players[0].y, p2y: this.players[1].y, p1d: this.players[0].dir, p2d: this.players[1].dir };
+        return JSON.stringify(myObj);
+    }
+
+    // Load the state of a game from a serialized JSON value.
+    deserialize(value) {
+        const obhdf = JSON.parse(value);
+        this.players[0].x = obhdf.p1x;
+        this.players[0].y = obhdf.p1y;
+        this.players[0].dir = obhdf.p1d;
+        this.players[1].x = obhdf.p2x;
+        this.players[1].y = obhdf.p2y;
+        this.players[1].dir = obhdf.p2d;
+
+
+    }
+
+    drawObstacles(ctx) {
+        ctx.fillStyle = OBSTACLE_COLOR;
+
+        for (const [x, y, w, h] of OBSTACLES) {
+
+            ctx.fillRect(x * SCALE, y * SCALE, w * SCALE, h * SCALE);
+        }
+    }
+
+
+
 }
 
 
-
-
-function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawObstacles();
-    processKeys();
-
-    players.forEach(function (player) {
-        player.drawPlayer();
-    });
-}
-function game() {
-    render();
-    setTimeout(() => {
-        window.requestAnimationFrame(game);
-    }, inputActive ? NORMAL_GAME_SPEED : FAST_GAME_SPEED);
-}
-
-
-const players = [new Player(10, 61, "#b0e070", E, 'w', 'd', 'a', 'c'), new Player(141, 60, "#d0d040", W, 'p', "'", 'l', ',')];
-players.forEach(function (player) {
-    player.initializeActionMap();
-});
-window.requestAnimationFrame(game);
-
-
-// cmd option r!
-
-
-
+new netplayjs.LockstepWrapper(CombatGame).start();
