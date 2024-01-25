@@ -3,20 +3,36 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="favicons/favicon-5.ico">
-    <title>Combat</title>
+    <title>MultiPlayer Snake</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <style>
+        #gameScreen {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-
-    <br><br><br><br>
-    <canvas id="pong" width="1600" height="1200"></canvas>
-    <script src="constants.js"></script>
-    <script src="script.js"></script>
+    <section class="vh-100">
+        <div class="container h-100">
 
 
+
+
+            <div id="gameScreen" class="h-100">
+                <div class="d-flex flex-column align-items-center justify-content-center h-100">
+
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>
